@@ -1,1 +1,1 @@
-time series analysis using mistral 7b model
+time series analysis using mistral 7b model and timesfm
