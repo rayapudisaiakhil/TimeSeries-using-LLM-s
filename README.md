@@ -1,79 +1,20 @@
-TimeSeries Using LLMs
-Overview
-This research project evaluates the possibilities and effectiveness of using Large Language Models (LLMs) for Time Series Forecasting. The project explores novel approaches to leverage the pattern recognition and sequential reasoning capabilities of LLMs for predicting future values in time series data.
-Motivation
-Traditional time series forecasting methods often require specialized model designs for different tasks and applications. In contrast, LLMs have demonstrated robust pattern recognition and reasoning abilities over complex sequences of tokens. This project investigates how to effectively align time series data with natural language to leverage these capabilities for forecasting tasks.
-Features
-
-Implementation of time series tokenization techniques for LLMs
-Prompt engineering strategies tailored for time series data
-Methods for aligning time series embeddings with language space
-Evaluation framework for comparing LLM-based approaches with traditional forecasting methods
-Adaptations of popular LLM architectures for time series tasks
-
-Key Methods
-Our research explores several innovative approaches:
-
-Direct Querying: Using LLMs to generate forecasts through carefully crafted prompts
-Custom Tokenization: Techniques for converting numerical time series into formats suitable for LLMs
-Cross-Modal Alignment: Methods to bridge the gap between time series data and natural language
-Fine-Tuning: Specialized training approaches for adapting LLMs to time series tasks
-Model Integration: Hybrid architectures combining LLMs with traditional time series models
-
-Dataset Support
-The codebase provides support for processing and evaluating performance on standard time series benchmarks, including:
-
-Economic and financial datasets
-Weather and environmental data
-Energy consumption data
-Sensor readings from IoT devices
-
-Installation
-bashgit clone https://github.com/rayapudisaiakhil/TimeSeries-using-LLM-s.git
-cd TimeSeries-using-LLM-s
-pip install -r requirements.txt
-Usage
-Detailed usage instructions are provided in the documentation. Basic examples include:
-python# Example code for loading a dataset and running a prediction
-from models import TimeLLM
-from data_utils import load_dataset
-
-# Load your time series data
-data = load_dataset("your_dataset.csv")
-
-# Initialize the model
-model = TimeLLM(model_name="gpt-3.5-turbo")
-
-# Get predictions
-predictions = model.predict(data, forecast_horizon=7)
-Results
-Our experiments demonstrate that LLM-based approaches can:
-
-Capture complex temporal dependencies in diverse datasets
-Leverage contextual information to improve forecast accuracy
-Generalize well across different domains with minimal adaptation
-Provide interpretable forecasts with textual explanations
-
-Future Work
-
-Integration with multimodal data sources
-Exploring specialized architectures for time-series specific LLMs
-Investigating zero-shot and few-shot learning capabilities for new datasets
-Reducing computational requirements for real-time forecasting applications
-
-Citation
-If you use this code or methodology in your research, please cite:
-@misc{rayapudi2024timeseriesllm,
-  author = {Rayapudi, Sai Akhil},
-  title = {TimeSeries using LLMs},
-  year = {2024},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/rayapudisaiakhil/TimeSeries-using-LLM-s}}
-}
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
-Acknowledgements
-We thank the open-source community for their valuable contributions to the field of LLMs and time series forecasting, particularly the researchers behind foundational works like Time-LLM, TEST, and other related projects that have inspired this research.
-Contact
-For questions or collaborations, please reach out to Sai Akhil Rayapudi.
+## Time Series Forecasting using Large Language Models
+# Overview
+If Large Language Models can find patterns within textual data and produce the next words in an autoregressive way, can we make Large Language Models to predict the value of a variable in a future timestep given its historical data. We set out to investigate the capability of Large Language Models (LLMs) to perform multivariate time-series forecasting, benchmarking their performance against classical methods (e.g., Prophet) and specialized time-series foundation models​. Our study encompasses a range of LLM-based approaches—including single-pass prompts, sliding-window forecasting, multivariate input sequences, diffusion-inspired denoising, and hybrid reprogramming layers
+# Features
+1. Implementation of time series tokenization techniques for LLMs
+2. Prompt engineering strategies tailored for time series data
+3. Methods for aligning time series embeddings with language space
+4. Evaluation framework for comparing LLM-based approaches with traditional forecasting methods
+5. Adaptations of popular LLM architectures for time series tasks
+# Key Methods
+1. Prompt Engineering : We frame forecasting as a plain-language instruction:
+“Given the past LOOKBACK hourly temperatures: […], predict the next HORIZON hourly temperatures. Reply with a comma-separated list of numbers.” ​
+2. Data Splitting: Different approaches to splitting the data for training the LLM and generating a prediction
+- a. Batch Processing: In the simplest setup, we feed one contiguous year (8,640 hours) of raw temperature values to the quantized Mistral-7B model and request a 30-day (720-hour) forecast in a single pass
+-  b. Sliding-Window Forecasting: To mitigate long-horizon drift, we implement a sliding-window strategy: partition the historical series into overlapping segments of fixed length (e.g., 168 hours for a 7-day lookback) and iteratively predict the next window (24 hours), appending each prediction to the input for the subsequent step
+3. Post Prediciton Corrections: To correct systematic biases in LLM outputs, we explore two residual‐correction strategies correcting the generated outputs of LLM based on residuals
+4. Diffusion based models: Taking inspiration from predictor-corrector networks in diffusion models, we have applied Score based diffusion models to correct time series outputs
+# Results
+We have seen that LLM+Score based diffusion models had higher accuracy compared to Large Language models and traditional time series models. Further analysis has to be performed on different types of data and huge volumes of data validate the scalability of these models.
+For more information look into Project Report.pdf - https://github.com/rayapudisaiakhil/TimeSeries-using-LLM-s/blob/main/IE%207374%20Gen%20AI%20-%20Project%20Report.pdf
